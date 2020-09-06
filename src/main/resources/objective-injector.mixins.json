@@ -4,8 +4,6 @@
   "package": "site.neworld.objective.mixin",
   "compatibilityLevel": "JAVA_11",
   "mixins": [
-  ],
-  "client": [
     "MixinChunkStorage"
   ],
   "injectors": {

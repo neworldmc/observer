@@ -1,3 +1,5 @@
+import net.fabricmc.loom.task.RemapJarTask
+
 plugins {
     id 'fabric-loom' version '0.4-SNAPSHOT'
     id 'maven-publish'
@@ -22,12 +24,14 @@ dependencies {
     // Related to fabric modding environment
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
-    modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modCompile "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
     // Related to the actual implementation
-    implementation 'site.neworld.objective:core:0.0.1'
-    implementation 'site.neworld.objective:embeded:0.0.1'
+    modImplementation 'site.neworld.objective:core:0.0.1'
+    modImplementation 'site.neworld.objective:embeded:0.0.1'
+    shadow 'site.neworld.objective:core:0.0.1'
+    shadow 'site.neworld.objective:embeded:0.0.1'
 }
 
 processResources {
@@ -46,6 +50,30 @@ tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
 task sourcesJar(type: Jar, dependsOn: classes) {
     archiveClassifier.set("sources")
     from sourceSets.main.allSource
+}
+
+shadowJar {
+    minimize()
+    archiveClassifier.set("all-dev")
+    configurations = [project.configurations.shadow]
+    dependencies {
+        exclude(dependency('org.jetbrains.kotlin::.*')) // already have that in env
+        exclude(dependency('org.jetbrains.kotlinx::.*')) // already have that in env
+        exclude(dependency('it.unimi.dsi:fastutil:.*')) // we have that in minecraft. removed
+    }
+}
+
+task remapShadow(type: RemapJarTask, dependsOn: shadowJar) {
+    archiveClassifier.set("all")
+    setInput(shadowJar.archiveFile)
+    remapAccessWidener.set(remapJar.remapAccessWidener)
+    addNestedDependencies.set(remapJar.addNestedDependencies)
+}
+
+assemble {
+    configure {
+        dependsOn.add(remapShadow)
+    }
 }
 
 // configure the maven publication

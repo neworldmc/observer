@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "objective-injector",
   "version": "${version}",
 
   "name": "Objective Injector",
@@ -14,7 +14,7 @@
   },
 
   "license": "N/A",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/objective-injector/icon.png",
 
   "environment": "*",
   "entrypoints": {
@@ -23,13 +23,12 @@
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "objective-injector.mixins.json"
   ],
 
   "depends": {
     "fabric-language-kotlin": "1.3.72",
     "fabricloader": ">=0.7.4",
-    "fabric": "*",
     "minecraft": "1.16.x"
   },
   "suggests": {
