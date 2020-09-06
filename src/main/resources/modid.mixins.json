@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "site.neworld.objective.mixin",
+  "compatibilityLevel": "JAVA_11",
+  "mixins": [
+  ],
+  "client": [
+    "MixinChunkStorage"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

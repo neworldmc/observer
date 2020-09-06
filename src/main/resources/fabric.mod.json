@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "modid",
+  "version": "${version}",
+
+  "name": "Objective Injector",
+  "description": "This mod injects the objective data store into the minecraft game. Crafted with heart by the NEWorldMC Team",
+  "authors": [
+    "DWVoid", "Sunbread233"
+  ],
+  "contact": {
+    "homepage": "https://www.newinfinideas.cn",
+    "sources": "N/A"
+  },
+
+  "license": "N/A",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "site.neworld.objective.Initializer"
+    ]
+  },
+  "mixins": [
+    "modid.mixins.json"
+  ],
+
+  "depends": {
+    "fabric-language-kotlin": "1.3.72",
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
