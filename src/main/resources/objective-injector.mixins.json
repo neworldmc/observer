@@ -4,7 +4,8 @@
   "package": "site.neworld.objective.mixin",
   "compatibilityLevel": "JAVA_11",
   "mixins": [
-    "MixinChunkStorage"
+    "MixinChunkStorage",
+    "MixinThreadedAnvilStorage"
   ],
   "injectors": {
     "defaultRequire": 1

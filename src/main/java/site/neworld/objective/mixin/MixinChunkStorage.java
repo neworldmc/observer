@@ -14,9 +14,13 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import site.neworld.objective.ChunkStorageSync;
+import site.neworld.objective.IMixinChunkStorageTweakProviderConsumer;
+import site.neworld.objective.MixinChunkStorageTweakProvider;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 @Mixin(VersionedChunkStorage.class)
 public class MixinChunkStorage {
@@ -26,27 +30,25 @@ public class MixinChunkStorage {
     @Shadow
     private FeatureUpdater featureUpdater;
 
-    private ChunkStorageSync storage;
+    public final MixinChunkStorageTweakProvider theStorage = new MixinChunkStorageTweakProvider();
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void init(File file, DataFixer dataFixer, boolean bl, CallbackInfo ci) throws IOException {
         worker.close(); // not null, but closed setting to null will lead to crashes
-        storage = new ChunkStorageSync(file);
-    }
-
-    @Overwrite
-    public CompoundTag getNbt(ChunkPos pos) throws IOException {
-        var bytes = this.storage.getBytes(new site.neworld.objective.utils.ChunkPos(pos.x, pos.z));
-        return (bytes != null) ? NbtIo.read(new DataInputStream(new ByteArrayInputStream(bytes))) : null;
-    }
-
-    @Overwrite
-    public void setTagAt(ChunkPos pos, CompoundTag compoundTag) throws IOException {
-        var outputStream = new ByteArrayOutputStream();
-        try (var stream = new DataOutputStream(outputStream)) {
-            NbtIo.write(compoundTag, stream);
+        theStorage.setup(file);
+        if (this instanceof IMixinChunkStorageTweakProviderConsumer) {
+            ((IMixinChunkStorageTweakProviderConsumer)this).consumeIMixinChunkStorageTweakProvider(theStorage);
         }
-        this.storage.setBytes(new site.neworld.objective.utils.ChunkPos(pos.x, pos.z), outputStream.toByteArray());
+    }
+
+    @Overwrite
+    public CompoundTag getNbt(ChunkPos pos) {
+        return theStorage.getNbtNow(new site.neworld.objective.utils.ChunkPos(pos.x, pos.z));
+    }
+
+    @Overwrite
+    public void setTagAt(ChunkPos pos, CompoundTag compoundTag) {
+        theStorage.setNbtNow(new site.neworld.objective.utils.ChunkPos(pos.x, pos.z), compoundTag);
         if (this.featureUpdater != null) {
             this.featureUpdater.markResolved(pos.toLong());
         }
@@ -58,6 +60,6 @@ public class MixinChunkStorage {
 
     @Overwrite
     public void close() {
-        this.storage.close();
+        theStorage.destroy();
     }
 }

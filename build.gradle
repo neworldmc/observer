@@ -34,6 +34,11 @@ dependencies {
     shadow 'site.neworld.objective:embeded:0.0.1'
 }
 
+compileKotlin {
+    kotlinOptions.jvmTarget = '11'
+    kotlinOptions { freeCompilerArgs = ["-Xjvm-default=enable"] }
+}
+
 processResources {
     inputs.property "version", project.version
 
@@ -60,6 +65,7 @@ shadowJar {
         exclude(dependency('org.jetbrains.kotlin::.*')) // already have that in env
         exclude(dependency('org.jetbrains.kotlinx::.*')) // already have that in env
         exclude(dependency('it.unimi.dsi:fastutil:.*')) // we have that in minecraft. removed
+        exclude(dependency('org.apache.logging.log4j:.*:.*')) // we have that in minecraft. removed
     }
 }
 
