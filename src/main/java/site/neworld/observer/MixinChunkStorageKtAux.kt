@@ -1,10 +1,11 @@
-package site.neworld.objective
+package site.neworld.observer
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtIo
+import site.neworld.objective.Controller
 import site.neworld.objective.data.LevelStorage
 import site.neworld.objective.utils.ChunkPos
 import java.io.*

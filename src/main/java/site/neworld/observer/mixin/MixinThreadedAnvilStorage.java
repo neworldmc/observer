@@ -1,4 +1,4 @@
-package site.neworld.objective.mixin;
+package site.neworld.observer.mixin;
 
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.util.Either;
@@ -28,10 +28,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import site.neworld.objective.IMixinChunkStorageTweakProviderConsumer;
-import site.neworld.objective.IMixinThreadedAnvilStorageTweakExposed;
-import site.neworld.objective.MixinChunkStorageTweakProvider;
-import site.neworld.objective.MixinThreadedAnvilStorageKtAuxKt;
+import site.neworld.observer.IMixinThreadedAnvilStorageTweakExposed;
+import site.neworld.observer.IMixinChunkStorageTweakProviderConsumer;
+import site.neworld.observer.MixinChunkStorageTweakProvider;
+import site.neworld.observer.MixinThreadedAnvilStorageKtAuxKt;
 
 import java.io.File;
 import java.io.IOException;
@@ -112,6 +112,9 @@ public abstract class MixinThreadedAnvilStorage extends VersionedChunkStorage im
         if (compoundTag != null) {
             boolean bl = compoundTag.contains("Level", 10) && compoundTag.getCompound("Level").contains("Status", 8);
             if (bl) {
+                // TODO(while obviously to deserialize the chunk a hugh amount of computation is required)
+                // TODO(as this involves multiple "managers", I am sure that this is not thread-safe)
+                // TODO(we need to further inspect and replace the deserialize implementation with a thread-safe one)
                 Chunk chunk = ChunkSerializer.deserialize(this.world, this.structureManager, this.pointOfInterestStorage, pos, compoundTag);
                 chunk.setLastSaveTime(this.world.getTime());
                 this.method_27053(pos, chunk.getStatus().getChunkType());

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "objective-injector",
+  "id": "observer",
   "version": "${version}",
 
-  "name": "Objective Injector",
-  "description": "This mod injects the objective data store into the minecraft game. Crafted with heart by the NEWorldMC Team",
+  "name": "Observer",
+  "description": "This mod is part of the NWMC minecraft microservices project. Offers a variety of optimizations. Crafted with heart by the NEWorldMC Team",
   "authors": [
     "DWVoid", "Sunbread233"
   ],
@@ -19,11 +19,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "site.neworld.objective.Initializer"
+      "site.neworld.observer.Initializer"
     ]
   },
   "mixins": [
-    "objective-injector.mixins.json"
+    "observer.mixins.json"
   ],
 
   "depends": {
