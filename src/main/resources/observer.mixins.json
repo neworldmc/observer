@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_11",
   "mixins": [
     "MixinChunkStorage",
-    "MixinThreadedAnvilStorage",
-    "MixinTypeFilterableList"
+    "MixinThreadedAnvilStorage"
   ],
   "injectors": {
     "defaultRequire": 1
